@@ -1,0 +1,3 @@
+- [ ] change logo (top left graphic)
+  - [ ] create custom logo (img or svg?)
+- [ ] change favicon (browser tab graphic)
