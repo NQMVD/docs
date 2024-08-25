@@ -45,6 +45,8 @@
       "pages": [
         "essentials/markdown",
         "essentials/code",
+        "essentials/cards",
+        "essentials/card-groups",
         "essentials/images",
         "essentials/settings",
         "essentials/navigation",
