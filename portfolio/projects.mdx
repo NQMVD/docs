@@ -12,7 +12,7 @@ icon: 'code'
 
 __L.C.S.__ steht für "Logic Circuit Simulator" und ist ein _Proof of Concept_ Prototyp, den ich im Rahmen eines Schulprojektes entwickelte.
 
-L.C.S. ist in Lua (und teilweise in Moonscript) geschrieben und verwendet das Love2D Framework.
+L.C.S. ist in [Lua](https://www.lua.org/about.html) (und teilweise in <Tooltip tip="Superset für Lua, Indent-Syntax, Komiliert zu Lua, https://moonscript.org">Moonscript</Tooltip>) geschrieben und verwendet das [Love2D Framework](https://love2d.org/).
 Da es wie gesagt nur ein Proof of Concept Schulprojekt ist, wurde die Entwicklung nach dem Schuljahr eingestellt und wird vorerst auch nicht wieder aufgenommen. Hier ist der [Link zum Repository](https://github.com/LogicCircuitSim/LCS/tree/menu-update).
 
 In diesem Dropdown gibt es die ganze Geschichte über das Projekt:
@@ -42,12 +42,31 @@ In diesem Dropdown gibt es die ganze Geschichte über das Projekt:
 
 __boss__ ist ein Terminal Programm, das als eine Art "wrapper" für verschiedene Package Manager auf Linux dient.
 
-boss ist in Rust geschrieben, da sich Rust als eine moderne Alternative zu herkömmlichen C Programmen im Bezug auf CLI Tools erwiesen hat. Siehe [hier](https://www.rust-lang.org/what/embedded).
+boss ist in [Rust](https://www.rust-lang.org/) geschrieben, da sich Rust als eine moderne Alternative zu herkömmlichen C Programmen im Bezug auf CLI Tools erwiesen hat.
+
+<Accordion title="Beispiele">
+
+| Original | Rust Rewrite      |
+| -------- | ----------------- |
+| ls       | exa/eza           |
+| cat      | bat               |
+| grep     | ripgrep           |
+| tmux     | zellij            |
+| bash     | nushell           |
+| vim/kak  | helix             |
+| ranger   | yazi              |
+| top      | bottom            |
+| find     | fd                |
+| lazygit  | gitui             |
+| fzf      | skim              |
+
+</Accordion>
 
 boss ist ein Projekt, das ich in meiner Freizeit entwickle und es ist noch nicht fertig. Hier ist der [Link zum Repository](https://github.com/NQMVD/boss)
 
 
 <Accordion title="Geschichte von boss">
+WIP!
 - zuerst bash
 - dann nushell "checker"
 - dann rust
