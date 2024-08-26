@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Noah Bürgler",
+  "name": "Noah B",
   "logo": {
     "dark": "/logo/dark.svg",
     "light": "/logo/light.svg"
@@ -31,6 +31,7 @@
       "pages": [
         "portfolio/introduction",
         "portfolio/projects",
+        "portfolio/skills",
         {
           "group": "Skills",
           "icon": "flask",
@@ -48,6 +49,19 @@
     {
       "group": "KONTAKT",
       "pages": ["contact", "about"]
+    },
+    {
+      "group": "REFERENCE",
+      "pages": [
+        "essentials/markdown",
+        "essentials/code",
+        "essentials/cards",
+        "essentials/card-groups",
+        "essentials/images",
+        "essentials/settings",
+        "essentials/navigation",
+        "essentials/reusable-snippets"
+      ]
     }
   ],
   "footerSocials": {
