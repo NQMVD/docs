@@ -1,29 +1,7 @@
----
-title: 'Noah Bürgler'
-description: 'Willkommen auf meiner Portfolio Website!'
-icon: 'user'
----
-
-<Warning>Diese Seite ist noch im Aufbau.</Warning>
-
-<img
-  className="block dark:hidden"
-  src="/images/profile_picture.jpg"
-  style={{ borderRadius: '1rem' }}
-  alt="Hero Light"
-/>
-<img
-  className="hidden dark:block"
-  src="/images/profile_picture.jpg"
-  style={{ borderRadius: '1rem' }}
-  alt="Hero Dark"
-/>
-
-# Über mich
 
 Hi!
 
-Ich bin __Noah__, 20 Jahre alt und begeisterter IT-Nerd.
+Ich bin Noah, 20 Jahre alt und begeisterter IT-Nerd.
 
 Meine Lieblingsbeschäftigung ist Programmieren, außerdem arbeite ich gerne im Garten und an DIY Projekten.
 
@@ -40,9 +18,3 @@ Meine Erfahrungen und Kentnisse habe ich nochmal auf der darauf folgenden Seite 
 Danach gibt es noch eine Timeline und ein paar Links.
 
 Am Besten bin ich per Email oder Telegram zu erreichen.
-
-
-## Sprachen
-
-- Deutsch (Muttersprache)
-- Englisch (Fließend)
