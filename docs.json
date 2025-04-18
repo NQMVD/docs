@@ -5,11 +5,11 @@
   "colors": {
     "primary": "#A876F9",
     "light": "#A876F9",
-    "dark": "#FF0000"
+    "dark": "#A876F9"
   },
   "background": {
     "color": {
-      "dark": "#050005"
+      "dark": "#090009"
     }
   },
   "favicon": "/favicon.svg",
@@ -36,38 +36,48 @@
         ]
       },
       {
-        "dropdown": "API Reference",
+        "dropdown": "Libraries",
+        "icon": "books",
         "groups": [
           {
-            "group": "API Documentation",
-            "pages": ["api-reference/introduction"]
+            "group": "Rust Libraries",
+            "pages": [
+              "libs/rust/clap",
+              "libs/rust/anyhow",
+              "libs/rust/requestty",
+              "libs/rust/rayon"
+            ]
           },
           {
-            "group": "Endpoint Examples",
+            "group": "Lua Libraries",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "libs/lua/love2d",
+              "libs/lua/serpent",
+              "libs/lua/argparse"
             ]
+          }
+        ]
+      },
+      {
+        "dropdown": "Projects",
+        "groups": [
+          {
+            "group": "My Projects",
+            "pages": ["projects/boss", "projects/loveui", "projects/lcs"]
+          }
+        ]
+      },
+      {
+        "dropdown": "Blog",
+        "groups": [
+          {
+            "group": "Entries",
+            "pages": ["blog/first-post", "blog/second-post"]
           }
         ]
       }
     ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+    "global": {}
   },
   "logo": {
     "light": "/logo/light.svg",
@@ -76,8 +86,8 @@
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "label": "Docs",
+        "href": "https://mintlify.com/docs"
       }
     ],
     "primary": {
