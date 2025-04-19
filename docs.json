@@ -53,7 +53,10 @@
             "pages": [
               "libs/lua/love2d",
               "libs/lua/serpent",
-              "libs/lua/argparse"
+              "libs/lua/argparse",
+              "libs/lua/teal",
+              "libs/lua/tealworks",
+              "libs/lua/tealmacros"
             ]
           }
         ]

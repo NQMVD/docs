@@ -1,0 +1,321 @@
+---
+title: 'Teal'
+description: 'Reference documentation for Teal, a typed dialect of Lua focusing on static analysis and type safety.'
+---
+
+## Description
+
+Teal is a typed dialect of Lua designed to add static type checking capabilities to Lua development. It allows developers to declare types for variables, function parameters, and return values, enabling the `tl` compiler to catch type-related errors before runtime. Teal code compiles directly to standard Lua code.
+
+Key goals include:
+*   Catching type errors (e.g., typos, incorrect argument types) at compile time.
+*   Improving code clarity and maintainability through explicit type annotations.
+*   Providing better tooling and static analysis for Lua-based projects.
+*   Maintaining compatibility with existing Lua code and ecosystems.
+
+## Installation
+
+Teal requires a Lua environment with LuaRocks.
+
+```sh
+luarocks install tl
+```
+
+This provides the `tl` command-line tool.
+
+## Command-Line Usage
+
+*   **`tl check <files...>`**: Type-checks Teal (`.tl`) or Lua (`.lua`) files.
+*   **`tl gen <files...>`**: Generates corresponding Lua (`.lua`) files from Teal (`.tl`) files.
+*   **`tl run <file.tl>`**: Type-checks and runs a Teal file directly.
+
+## Loading Teal Modules (`.tl`) from Lua
+
+To `require` `.tl` files directly from Lua without pre-compiling them with `tl gen`:
+
+```lua
+-- In your Lua entry point
+local tl = require("tl")
+tl.loader()
+
+-- Now you can require .tl files
+local my_module = require("my_module") -- Loads my_module.tl
+```
+
+## Type System Overview
+
+Teal introduces a static type system on top of Lua.
+
+### Basic Types
+
+*   `any`: Represents any Lua value. Type checking is bypassed; use with caution.
+*   `nil`: The type of the `nil` value.
+*   `boolean`: Represents `true` or `false`.
+*   `integer`: Represents whole numbers (precision depends on the underlying Lua VM). Subtype of `number`.
+*   `number`: Represents floating-point (or integer) numbers.
+*   `string`: Represents sequences of bytes.
+*   `thread`: Represents Lua coroutines.
+
+### Composite Types
+
+*   **Arrays**: Ordered sequences where all values have the same type. Uses Lua tables with sequential integer keys.
+    *   Syntax: `{ElementType}`
+    *   Example: `local names: {string} = {"Alice", "Bob"}`
+*   **Tuples**: Ordered sequences with elements of potentially different, known types at specific integer keys.
+    *   Syntax: `{Type1, Type2, ...}`
+    *   Example: `local person: {string, integer} = {"Alice", 30}`
+*   **Maps**: Key-value stores where all keys have one type and all values have another (possibly the same) type.
+    *   Syntax: `{KeyType: ValueType}`
+    *   Example: `local scores: {string: number} = {alice = 100, bob = 95}`
+
+### Named Types
+
+Types can be declared using `local type Name = ...` or `global type Name = ...`.
+
+*   **Records**: Tables with a predefined set of named fields, each with a specific type. Analogous to structs or objects. Records use *nominal typing*.
+    ```lua
+    local record Point
+       x: number
+       y: number
+    end
+
+    local p: Point = { x = 10, y = 20 }
+    ```
+*   **Interfaces**: Abstract record types defining a shape (set of fields and types) that concrete records can implement using the `is` keyword. Interfaces support multiple inheritance.
+    ```lua
+    local interface Movable
+        move: function(self, number, number)
+    end
+
+    local record Player is Movable
+        name: string
+        -- Implementation for move must be provided elsewhere
+    end
+    ```
+*   **Enums**: A restricted set of named string constants.
+    ```lua
+    local enum Status
+        "pending"
+        "running"
+        "completed"
+        "failed"
+    end
+
+    local current_status: Status = "running"
+    ```
+
+## Variables
+
+### Local Variables
+
+Variables must have a known type. Declaration requires either a type annotation or an initial value (excluding `nil`).
+
+<ParamField body="local name: Type" type="syntax">
+  Declare a variable `name` with explicit `Type`. Initial value is `nil`.
+  Example: `local count: integer`
+</ParamField>
+<ParamField body="local name = value" type="syntax">
+  Declare a variable `name` and infer its type from the initial `value`.
+  Example: `local message = "Hello"` (inferred as `string`)
+</ParamField>
+<ParamField body="local name: Type = value" type="syntax">
+  Declare a variable `name` with explicit `Type` and an initial `value`. The value must match the type.
+  Example: `local score: number = 0`
+</ParamField>
+<ParamField body="local name1, name2: Type1, Type2 = val1, val2" type="syntax">
+  Declare multiple variables with types and optional initial values.
+  Example: `local x, y: number, number = 10, 20`
+</ParamField>
+
+*Note: Initializing only with `nil` requires an explicit type annotation: `local file: File = nil`.*
+
+### Global Variables
+
+Global variables must be declared using `global` to define their type and make the compiler aware of them.
+
+<ParamField body="global name: Type" type="syntax">
+  Declare a global variable `name` with explicit `Type`.
+  Example: `global AppVersion: string`
+</ParamField>
+<ParamField body="global name = value" type="syntax">
+  Declare a global variable `name` and infer its type from the initial `value`.
+  Example: `global IsDebug = false`
+</ParamField>
+<ParamField body="global name: Type = value" type="syntax">
+  Declare a global variable `name` with explicit `Type` and an initial `value`.
+  Example: `global MaxUsers: integer = 100`
+</ParamField>
+<ParamField body="global function name(...) ... end" type="syntax">
+  Shorthand to declare a global function.
+  Example: `global function log(msg: string) print(msg) end`
+</ParamField>
+<ParamField body="global type Name = ..." type="syntax">
+  Declare a global type (record, enum, interface, etc.) visible across modules.
+  Example: `global type UserID = number`
+</ParamField>
+<ParamField body="global type Name" type="syntax">
+  Forward-declare a global type name to handle circular dependencies across files. The full definition must appear elsewhere.
+  Example: `global type TreeNode`
+</ParamField>
+
+### Variable Attributes
+
+Attributes provide additional compile-time constraints or information.
+
+<ParamField body="<const>" type="attribute">
+  Declares that the variable cannot be reassigned after initialization. The value itself (if a table/userdata) can still be mutated.
+  Example: `local MaxSize <const> = 1024`
+</ParamField>
+<ParamField body="<close>" type="attribute">
+  Marks a variable for automatic closing when it goes out of scope (requires Lua 5.4 target or compatibility). The variable's value must have a `__close` metamethod.
+  Example: `local f <close> = assert(io.open("file.txt"))`
+</ParamField>
+<ParamField body="<total>" type="attribute">
+  Requires that a table literal assigned to this variable explicitly initializes *all* possible keys defined by its type (useful for enums as map keys or record fields).
+  Example: `local handlers <total>: {Status: function()} = { pending = fn1, running = fn2, ... }`
+</ParamField>
+
+## Functions
+
+Type annotations are added to parameters and return values.
+
+```lua
+local function add(a: number, b: number): number
+   return a + b
+end
+
+local type Callback = function(string): boolean
+```
+
+### Parameters
+
+<ParamField body="name: Type" type="parameter" required>
+  A required parameter `name` of `Type`.
+</ParamField>
+<ParamField body="name?: Type" type="parameter">
+  An optional parameter `name` of `Type`. The function can be called without providing this argument. Inside the function, its value might be `nil`.
+</ParamField>
+<ParamField body="...: Type" type="parameter">
+  A variadic parameter list. All additional arguments must conform to `Type`. Accessed via `...` inside the function.
+  Example: `local function sum(...: number): number`
+</ParamField>
+
+### Return Types
+
+<ParamField body=": Type" type="return">
+  The function returns a single value of `Type`.
+</ParamField>
+<ParamField body=": (Type1, Type2, ...)" type="return">
+  The function returns multiple specific values with types `Type1`, `Type2`, etc.
+</ParamField>
+<ParamField body=": Type..." type="return">
+  The function returns a variable number of values, all of `Type`.
+</ParamField>
+<ParamField body=": ()" type="return">
+  The function returns no values. (Equivalent to omitting the return type annotation).
+</ParamField>
+
+*   **Multi-value `as`**: Cast multiple return values using `as (Type1, Type2, ...)`:
+    ```lua
+    local x, y = some_func(...) as (string, number)
+    ```
+
+### Iterators
+
+Functions returning an iterator function can be used in generic `for` loops. Type inference works based on the iterator's return type.
+
+```lua
+-- Returns an iterator function that yields strings
+local function string_iterator(): (function(): string)
+    -- ... implementation ...
+    return function(): string -- The actual iterator
+        -- ... yield logic ...
+    end
+end
+
+for word: string in string_iterator() do -- word is inferred as string
+    print(word)
+end
+```
+
+## Advanced Type Features
+
+### Generics
+
+Define functions and types that operate on abstract types.
+
+*   **Syntax**: `<T>`, `<K, V>`, etc., declared after the function or type name.
+*   **Usage**: Use type variables (`T`, `K`, `V`) within the signature and body.
+*   **Inference**: Types are inferred at the call site.
+*   **Constraints**: Restrict type variables using `is Interface`.
+
+```lua
+-- Generic function
+local function identity<T>(val: T): T
+    return val
+end
+
+-- Generic record
+local record Box<T>
+    value: T
+end
+
+-- Constrained generic
+local function get_name<P is Named>(person: P): string
+    return person.name
+end
+```
+
+### Union Types
+
+Allow a variable to hold values of multiple specified types, separated by `|`.
+
+*   **Syntax**: `Type1 | Type2 | ...`
+*   **Discrimination**: Use the `is` operator within `if` statements to narrow down the type within a specific code block.
+*   **Limitations**:
+    *   `is` only works on variables, not arbitrary expressions.
+    *   Unions involving multiple *table* types require those types to be records/interfaces with discriminating `where` clauses (e.g., `where self.kind == "typename"`).
+    *   Cannot currently union `string` with `enum` or multiple `enum` types due to runtime ambiguity.
+
+```lua
+local function process(input: string | number)
+    if input is string then
+        print("String:", input:upper())
+    elseif input is number then
+        print("Number:", input + 1)
+    end
+end
+```
+
+### Metamethods
+
+Declare expected metamethods within record definitions using the `metamethod` keyword for static checking. Assign the actual metatable at runtime using `setmetatable`.
+
+```lua
+local record Vector
+    x: number
+    y: number
+    metamethod __add: function(Vector, Vector): Vector
+end
+
+local mt: metatable<Vector> = {
+    __add = function(a: Vector, b: Vector): Vector
+        -- ... implementation ...
+    end
+}
+
+local v1: Vector = setmetatable({x=1, y=2}, mt)
+```
+
+## Lua Interoperability
+
+*   `tl check` can process `.lua` files.
+*   In `.lua` files, untyped variables have the special type `unknown`. Operations involving `unknown` are not type-checked.
+*   Type annotations can be added incrementally to `.lua` files (making them invalid Lua but checkable by `tl` and loadable via `tl.loader()`).
+*   Requires between Teal and Lua modules work as expected, with type checking applied where types are known.
+
+## Standard Library & Compatibility
+
+*   Teal includes type definitions for a subset of the Lua 5.3 standard library.
+*   It uses `lua-compat-5.3` by default to provide consistent behavior and features (like bitwise operators `&`, `|`, `~`, `<<`, `>>` and integer division `//`) across different Lua versions (5.1+).
+*   Compatibility can be disabled (`--skip-compat53`), but behavior may vary across Lua versions.

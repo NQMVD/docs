@@ -1,0 +1,121 @@
+---
+title: 'Teal: Macro Expressions'
+description: 'Learn about macro expressions (`macroexp`) in Teal for inline code expansion.'
+---
+
+## Description
+
+Teal includes a feature called **macro expressions**, declared using the `macroexp` keyword. These are a restricted form of function whose bodies are expanded directly inline wherever they are called during the Lua code generation phase. The `macroexp` declaration itself does not produce any Lua code.
+
+Macro expressions were initially introduced to support the implementation of `where` clauses on records and interfaces, which enable the type discrimination used by the `is` operator.
+
+## Declaration Syntax
+
+Macro expressions are declared similarly to functions, but use the `macroexp` keyword.
+
+<ParamField body="local macroexp name(params...): ReturnType" type="syntax">
+  Declares a local macro expression named `name`.
+  Example:
+  ```lua
+  local macroexp add(a: number, b: number): number
+     return a + b
+  end
+  ```
+</ParamField>
+
+<ParamField body="macroexp(params...): ReturnType" type="syntax">
+  Declares an anonymous macro expression, often used for inline definitions within records or metamethods.
+  Example (inside a record definition):
+  ```lua
+  get_field: function(self): T = macroexp(self: MyRecord): T
+     return self.field
+  end
+  ```
+</ParamField>
+
+## Restrictions
+
+Macro expressions have two important restrictions to ensure safe inline expansion:
+
+1.  **Single Return Expression:** The body of a `macroexp` must consist of exactly one `return` statement, returning a single expression.
+2.  **Single Argument Use:** Each argument passed to the `macroexp` can appear at most *once* within the returned expression. This prevents accidental duplication of side effects if an argument expression had them.
+
+## Use Cases & Examples
+
+### Basic Inline Expansion
+
+Simple operations can be defined as macros to avoid function call overhead.
+
+```lua
+local macroexp square(x: number): number
+   return x * x
+end
+
+local y = square(5 + 3) -- Expands to: local y = (5 + 3) * (5 + 3)
+print(y) -- Output: 64
+```
+
+### Inline Record Methods
+
+Define simple getter-like methods directly in a record without generating a separate function.
+
+```lua
+local record Point
+   x: number
+   y: number
+
+   get_x: function(self): number = macroexp(self: Point): number
+      return self.x
+   end
+end
+
+local p: Point = { x = 10, y = 20 }
+local val = p:get_x() -- Expands to: local val = p.x
+print(val) -- Output: 10
+```
+
+### Compile-Time Metamethods
+
+Implement simple metamethods directly via inline expansion, avoiding the need for a runtime metatable for these specific operations.
+
+```lua
+local record Value
+   val: number
+
+   metamethod __lt: function(a: Value, b: Value): boolean = macroexp(a: Value, b: Value): boolean
+      return a.val < b.val
+   end
+end
+
+local v1: Value = { val = 5 }
+local v2: Value = { val = 10 }
+
+if v1 < v2 then -- Expands to: if v1.val < v2.val then
+   print("v1 is less")
+end
+```
+
+### Implementing `where` / `__is`
+
+The `where` clause used for discriminating record/interface types in unions is syntactic sugar for a `macroexp` implementing the hidden `__is` metamethod.
+
+```lua
+-- Using 'where' clause (preferred syntax)
+local record MyType is BaseInterface
+   kind: string
+   where self.kind == "my_type"
+end
+
+-- Equivalent explicit '__is' macroexp implementation
+local record MyType is BaseInterface
+   kind: string
+   metamethod __is: function(self: MyType): boolean = macroexp(self: MyType): boolean
+      return self.kind == "my_type"
+   end
+end
+```
+The `is` operator (`value is MyType`) effectively calls this `__is` macro, expanding the check inline.
+
+## Current Limitations
+
+*   **Type Inference:** Currently, when defining a record field or metamethod using an inline `macroexp`, the function type (e.g., `function(self: T): R`) must be explicitly annotated. Type inference for the `macroexp` itself in this context is not yet supported.
