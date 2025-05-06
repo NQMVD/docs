@@ -16,24 +16,9 @@
   "navigation": {
     "dropdowns": [
       {
-        "dropdown": "Guides",
-        "groups": [
-          {
-            "group": "Get Started",
-            "pages": ["introduction", "quickstart", "development"]
-          },
-          {
-            "group": "Essentials",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
-            ]
-          }
-        ]
+        "dropdown": "Home",
+        "icon": "house",
+        "pages": ["home"]
       },
       {
         "dropdown": "Libraries",
@@ -58,6 +43,36 @@
               "libs/lua/tealworks",
               "libs/lua/tealmacros"
             ]
+          }
+        ]
+      },
+      {
+        "dropdown": "Std Libs",
+        "icon": "books",
+        "groups": [
+          {
+            "group": "Rust std",
+            "pages": [
+              "std/rust/cow",
+              "std/rust/box",
+              "std/rust/rcarc"
+            ]
+          },
+          {
+            "group": "Lua std",
+            "pages": [
+              "std/lua/math",
+              "std/lua/string"
+            ]
+          }
+        ]
+      },
+      {
+        "dropdown": "CLI Tools",
+        "groups": [
+          {
+            "group": "CLI Tools",
+            "pages": ["projects/boss", "projects/loveui", "projects/lcs"]
           }
         ]
       },
