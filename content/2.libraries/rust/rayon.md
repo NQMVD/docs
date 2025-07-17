@@ -1,13 +1,13 @@
 ---
 title: 'rayon'
 description: 'data parallelism'
-icon: 'train-track'
+icon: 'fa6-solid:train'
 ---
 
 <CardGroup cols={3}>
-  <Card title="crates.io" icon="box-open" href="https://crates.io/crates/rayon">View the crate</Card>
-  <Card title="docs.rs" icon="book" href="https://docs.rs/clap/latest/rayon">Read the docs</Card>
-  <Card title="Repo" icon="inbox" href="https://github.com/clap-rs/clap">Visit the Repo</Card>
+  <Card title="crates.io" icon="fa6-solid:box-open" href="https://crates.io/crates/rayon">View the crate</Card>
+  <Card title="docs.rs" icon="fa6-solid:book" href="https://docs.rs/clap/latest/rayon">Read the docs</Card>
+  <Card title="Repo" icon="fa6-solid:inbox" href="https://github.com/clap-rs/clap">Visit the Repo</Card>
 </CardGroup>
 
 ---

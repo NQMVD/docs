@@ -9,7 +9,7 @@ cols: 3
 ::card
 ---
 title: crates.io
-icon: box-open
+icon: fa6-solid:box-open
 to: https://crates.io/crates/clap
 ---
 View the crate
@@ -18,7 +18,7 @@ View the crate
 ::card
 ---
 title: docs.rs
-icon: book
+icon: fa6-solid:book
 to: https://docs.rs/clap/latest/clap
 ---
 Read the docs
@@ -27,7 +27,7 @@ Read the docs
 ::card
 ---
 title: Repo
-icon: inbox
+icon: fa6-solid:inbox
 to: https://github.com/clap-rs/clap
 ---
 Visit the Repo

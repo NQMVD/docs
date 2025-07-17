@@ -1,13 +1,13 @@
 ---
 title: "anyhow"
 description: "easier application-level error handling"
-icon: "xmark"
+icon: "fa6-solid:xmark"
 ---
 
 <CardGroup cols={3}>
-  <Card title="crates.io" icon="box-open" href="https://crates.io/crates/anyhow">View the crate</Card>
-  <Card title="docs.rs" icon="book" href="https://docs.rs/clap/latest/anyhow">Read the docs</Card>
-  <Card title="Repo" icon="inbox" href="https://github.com/clap-rs/clap">Visit the Repo</Card>
+  <Card title="crates.io" icon="fa6-solid:box-open" href="https://crates.io/crates/anyhow">View the crate</Card>
+  <Card title="docs.rs" icon="fa6-solid:book" href="https://docs.rs/clap/latest/anyhow">Read the docs</Card>
+  <Card title="Repo" icon="fa6-solid:inbox" href="https://github.com/clap-rs/clap">Visit the Repo</Card>
 </CardGroup>
 
 ---
